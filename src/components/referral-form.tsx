@@ -20,13 +20,10 @@ const ReferralForm = () => {
         throw new Error("Invalid email")
       } 
       
-      // Generate referral code
       generateReferralCode()
       
-      // Get the generated code
       let referralCode = getReferralCode()
       
-      // Try to save the code, regenerate if there's a conflict
       let attempts = 0
       const maxAttempts = 5
       let result = null
@@ -38,27 +35,24 @@ const ReferralForm = () => {
           console.log('Verification code saved successfully:', result.code)
           break
         } else if (result.error === 'Verification code already exists') {
-          console.log('Code conflict detected, regenerating...')
+          throw new Error('Code conflict detected, regenerating...')
           generateReferralCode()
           referralCode = getReferralCode()
           attempts++
         } else {
-          console.error('Failed to save verification code:', result.error)
+          throw new Error('Failed to save verification code:', result.error)
           break
         }
       }
       
       if (attempts >= maxAttempts) {
-        console.error('Failed to generate unique code after maximum attempts')
-        alert('Unable to generate a unique verification code. Please try again.')
+        throw new Error('Unable to generate a unique verification code. Please try again.')
         return
       }
       
-      // Navigate to share screen
       switchScreen('share')
     } catch (error) {
-      console.error('Error in referral form submission:', error)
-      alert('An error occurred while creating your referral code. Please try again.')
+      alert(error)
     } finally {
       setIsLoading(false)
     }
