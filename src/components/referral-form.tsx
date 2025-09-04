@@ -40,7 +40,7 @@ const ReferralForm = () => {
           referralCode = getReferralCode()
           attempts++
         } else {
-          throw new Error('Failed to save verification code:', result.error)
+          throw new Error(`Failed to save verification code: ${result.error}`)
           break
         }
       }
