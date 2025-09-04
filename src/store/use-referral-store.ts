@@ -14,7 +14,7 @@ export const useReferralStore = create<ReferralStore>((set, get) => ({
   },
 
   generateReferralCode: () => {
-    const code = 'NV' + Math.random().toString(36).substr(2, 8).toUpperCase()
+    const code = 'NV' + Math.floor(1000 + Math.random() * 9999);
     set({ referralCode: code, isGenerated: true })
   },
 
