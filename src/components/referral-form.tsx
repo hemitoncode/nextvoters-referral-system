@@ -12,6 +12,14 @@ const ReferralForm = () => {
     setIsLoading(true)
     
     try {
+      if (!email) {
+        throw new Error("Email is empty. Cannot continue forward until we have a email")
+      }
+
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        throw new Error("Invalid email")
+      } 
+      
       // Generate referral code
       generateReferralCode()
       
