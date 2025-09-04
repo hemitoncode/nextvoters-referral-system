@@ -1,9 +1,4 @@
-export interface VerificationCode {
-  code: string
-  email: string | null
-  timestamp: string
-  used: boolean
-}
+import { VerificationCode } from '@/types/verification'
 
 export interface VerificationResponse {
   success: boolean
@@ -42,6 +37,7 @@ export const addVerificationCode = async (
     console.error('Error adding verification code:', error)
     return {
       success: false,
+      message: 'Failed to add verification code',
       error: 'Failed to add verification code'
     }
   }
