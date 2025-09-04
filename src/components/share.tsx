@@ -7,7 +7,15 @@ const Share = () => {
   const referralCode = getReferralCode()
   const [platform, setPlatform] = useState<platformType>('linkedin')
 
-  const handleShare = () => {
+  const handleLinkedInShare = () => {
+    const text = `THRILLED TO BE A 2025 NEXT VOTERS FELLOW FINALIST! 🎉\n\nThis fellowship is for college & exceptional high school students who want to shape the future of democracy.\n\nFellows learn directly from Political Science professors like Morris Fiorina (Stanford) and Diana Mutz (UPenn), access $10,000+ in scholarships, and more.\n\nApplications are still open. Deadline to apply: September 14\n\nUse my referral code: ${referralCode}`
+    
+    const linkedInUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent('https://nextvoters.org')}&title=${encodeURIComponent('Next Voters Fellowship Finalist')}&summary=${encodeURIComponent(text)}`
+    
+    window.open(linkedInUrl, '_blank', 'width=600,height=400')
+  }
+
+  const handleInstagramShare = () => {
     const text = `THRILLED TO BE A 2025 NEXT VOTERS FELLOW FINALIST! 🎉\n\nThis fellowship is for college & exceptional high school students who want to shape the future of democracy.\n\nFellows learn directly from Political Science professors like Morris Fiorina (Stanford) and Diana Mutz (UPenn), access $10,000+ in scholarships, and more.\n\nApplications are still open. Deadline to apply: September 14\n\nUse my referral code: ${referralCode}`
     
     if (navigator.share) {
@@ -18,6 +26,14 @@ const Share = () => {
       })
     } else {
       navigator.clipboard.writeText(text)
+    }
+  }
+
+  const handleShare = () => {
+    if (platform === 'linkedin') {
+      handleLinkedInShare()
+    } else {
+      handleInstagramShare()
     }
   }
 
