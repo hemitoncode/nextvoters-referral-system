@@ -9,8 +9,7 @@ export const useScreenStore = create<ScreenStore>((set, get) => ({
   ...initialState,
 
   setScreen: (screen: Screen) => {
-    const currentScreen = get().currentScreen
-    set((state) => ({
+    set(() => ({
       currentScreen: screen,
     }))
   },

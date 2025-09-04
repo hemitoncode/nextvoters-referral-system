@@ -1,4 +1,5 @@
 import React from 'react'
+import Image from 'next/image'
 import Button from './ui/button'
 import { getReferralCode } from '@/lib/referral-utils'
 
@@ -20,10 +21,11 @@ const Share = () => {
           <div className="relative bg-gray-100 p-6 rounded-lg mb-6 overflow-hidden">
             <div className="relative w-full" style={{ aspectRatio: '3/2' }}>
               {/* Single Background PNG Image */}
-              <img 
+              <Image 
                 src="/referral-graphic.png" 
                 alt="Next Voters Fellowship Background"
-                className="w-full h-full object-cover"
+                fill
+                className="object-cover"
               />
               
               {/* HTML Text Overlay with Tailwind Absolute Positioning */}

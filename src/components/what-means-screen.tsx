@@ -11,7 +11,7 @@ const WhatMeansScreen = () => {
       </h1>
       
       <p className="text-gray-700 text-base md:text-lg mb-8 leading-relaxed">
-        All Finalists will receive an invite to join our exclusive community of other finalists, selected fellows, and the Next Voters team. Even if you're not selected as a fellow, you'll be part of a community of people who want to shape the future of democracy.
+        All Finalists will receive an invite to join our exclusive community of other finalists, selected fellows, and the Next Voters team. Even if you&apos;re not selected as a fellow, you&apos;ll be part of a community of people who want to shape the future of democracy.
       </p>
       
       <Button onClick={() => switchScreen('what-next')}>

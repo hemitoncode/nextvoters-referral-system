@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import fs from 'fs'
 import path from 'path'
+import { VerificationCode, CodesData } from '@/types/verification'
 
 const CODES_FILE_PATH = path.join(process.cwd(), 'data', 'verification-codes.json')
 
@@ -13,7 +14,7 @@ const ensureDataDirectory = () => {
 }
 
 // Read existing codes from JSON file
-const readCodes = () => {
+const readCodes = (): CodesData => {
   try {
     if (fs.existsSync(CODES_FILE_PATH)) {
       const data = fs.readFileSync(CODES_FILE_PATH, 'utf-8')
@@ -26,7 +27,7 @@ const readCodes = () => {
 }
 
 // Write codes to JSON file
-const writeCodes = (codes: any) => {
+const writeCodes = (codes: CodesData): boolean => {
   try {
     ensureDataDirectory()
     fs.writeFileSync(CODES_FILE_PATH, JSON.stringify(codes, null, 2))
@@ -38,7 +39,7 @@ const writeCodes = (codes: any) => {
 }
 
 // Check if code already exists
-const isCodeDuplicate = (codes: any[], newCode: string) => {
+const isCodeDuplicate = (codes: VerificationCode[], newCode: string): boolean => {
   return codes.some(existingCode => existingCode.code === newCode)
 }
 
