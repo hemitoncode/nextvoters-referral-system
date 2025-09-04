@@ -32,7 +32,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Verification code is required' }, { status: 400 })
     }
 
-    let codes = await fetchCodes()
+    const codes = await fetchCodes()
 
     if (codes.find(c => c.code === code)) {
       return NextResponse.json(
