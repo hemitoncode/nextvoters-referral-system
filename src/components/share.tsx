@@ -32,7 +32,6 @@ const Share = () => {
               </p>
             </div>
           </div>
-
           <div className="space-y-4">
             <Button onClick={handleLinkedInShare} className="w-full" variant='secondary'>
               Share on LinkedIn
