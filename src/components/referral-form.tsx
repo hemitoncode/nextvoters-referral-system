@@ -1,12 +1,39 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Button from './ui/button'
 import switchScreen from '@/lib/switch-screen'
-import { generateReferralCode } from '@/lib/referral-utils'
+import { generateReferralCode, getReferralCode } from '@/lib/referral-utils'
+import { addVerificationCode } from '@/lib/verification-utils'
 
 const ReferralForm = () => {
-  const handleSubmit = () => {
-    generateReferralCode()
-    switchScreen('share')
+  const [email, setEmail] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
+
+  const handleSubmit = async () => {
+    setIsLoading(true)
+    
+    try {
+      // Generate referral code
+      generateReferralCode()
+      
+      // Get the generated code
+      const referralCode = getReferralCode()
+      
+      // Save to verification codes JSON file
+      const result = await addVerificationCode(referralCode, email)
+      
+      if (result.success) {
+        console.log('Verification code saved successfully:', result.code)
+      } else {
+        console.error('Failed to save verification code:', result.error)
+      }
+      
+      // Navigate to share screen
+      switchScreen('share')
+    } catch (error) {
+      console.error('Error in referral form submission:', error)
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (
@@ -23,13 +50,15 @@ const ReferralForm = () => {
           type="email"
           id="email"
           name="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
           className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-black"
           placeholder="Enter your email address"
         />
       </div>
         
       <Button onClick={handleSubmit}>
-        Create my referral code
+        {isLoading ? 'Creating...' : 'Create my referral code'}
       </Button>
     </div>
   )
