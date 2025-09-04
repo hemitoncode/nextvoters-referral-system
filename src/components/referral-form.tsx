@@ -31,10 +31,7 @@ const ReferralForm = () => {
       while (attempts < maxAttempts) {
         result = await addVerificationCode(referralCode, email)
         
-        if (result.success) {
-          console.log('Verification code saved successfully:', result.code)
-          break
-        } else if (result.error === 'Verification code already exists') {
+        if (result.error === 'Verification code already exists') {
           throw new Error('Code conflict detected, regenerating...')
           generateReferralCode()
           referralCode = getReferralCode()
