@@ -19,7 +19,8 @@ const fetchCodes = async (): Promise<VerificationCode[]> => {
 const saveCodes = async (codes: VerificationCode[]) => {
   await put(BLOB_NAME, JSON.stringify(codes, null, 2), {
     contentType: 'application/json',
-    access: 'public', // optional, you can make it private
+    access: 'public', 
+    allowOverwrite: true
   })
 }
 
