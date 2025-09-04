@@ -33,23 +33,20 @@ const ReferralForm = () => {
         
         if (result.error === 'Verification code already exists') {
           throw new Error('Code conflict detected, regenerating...')
-          generateReferralCode()
-          referralCode = getReferralCode()
-          attempts++
         } else {
           throw new Error(`Failed to save verification code: ${result.error}`)
-          break
         }
       }
       
       if (attempts >= maxAttempts) {
         throw new Error('Unable to generate a unique verification code. Please try again.')
-        return
       }
       
       switchScreen('share')
     } catch (error) {
-      alert(error)
+      if (error instanceof Error) {
+        alert(error.message)
+      }
     } finally {
       setIsLoading(false)
     }
