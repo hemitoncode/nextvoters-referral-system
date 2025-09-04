@@ -23,7 +23,7 @@ const Share = () => {
               <img 
                 src="/referral-graphic.png" 
                 alt="Next Voters Fellowship Background"
-                className="absolute inset-0 w-full h-full"
+                className="w-full h-full object-cover"
               />
               
               {/* HTML Text Overlay with Tailwind Absolute Positioning */}
@@ -32,6 +32,17 @@ const Share = () => {
               </p>
             </div>
           </div>
+
+          {/* Screenshot Notes */}
+          <div className="space-y-2 mb-6">
+            <p className="text-sm text-gray-600 text-center">
+              📸 Take a screenshot of your certificate above to share on social media
+            </p>
+            <p className="text-sm text-gray-600 text-center">
+              💡 You can also use the LinkedIn button below to share your referral code
+            </p>
+          </div>
+
           <div className="space-y-4">
             <Button onClick={handleLinkedInShare} className="w-full" variant='secondary'>
               Share on LinkedIn
