@@ -16,21 +16,41 @@ const ReferralForm = () => {
       generateReferralCode()
       
       // Get the generated code
-      const referralCode = getReferralCode()
+      let referralCode = getReferralCode()
       
-      // Save to verification codes JSON file
-      const result = await addVerificationCode(referralCode, email)
+      // Try to save the code, regenerate if there's a conflict
+      let attempts = 0
+      const maxAttempts = 5
+      let result = null
       
-      if (result.success) {
-        console.log('Verification code saved successfully:', result.code)
-      } else {
-        console.error('Failed to save verification code:', result.error)
+      while (attempts < maxAttempts) {
+        result = await addVerificationCode(referralCode, email)
+        
+        if (result.success) {
+          console.log('Verification code saved successfully:', result.code)
+          break
+        } else if (result.error === 'Verification code already exists') {
+          console.log('Code conflict detected, regenerating...')
+          generateReferralCode()
+          referralCode = getReferralCode()
+          attempts++
+        } else {
+          console.error('Failed to save verification code:', result.error)
+          break
+        }
+      }
+      
+      if (attempts >= maxAttempts) {
+        console.error('Failed to generate unique code after maximum attempts')
+        alert('Unable to generate a unique verification code. Please try again.')
+        return
       }
       
       // Navigate to share screen
       switchScreen('share')
     } catch (error) {
       console.error('Error in referral form submission:', error)
+      alert('An error occurred while creating your referral code. Please try again.')
     } finally {
       setIsLoading(false)
     }

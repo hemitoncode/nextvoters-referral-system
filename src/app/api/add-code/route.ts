@@ -37,6 +37,11 @@ const writeCodes = (codes: any) => {
   }
 }
 
+// Check if code already exists
+const isCodeDuplicate = (codes: any[], newCode: string) => {
+  return codes.some(existingCode => existingCode.code === newCode)
+}
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
@@ -51,6 +56,18 @@ export async function POST(request: NextRequest) {
 
     // Read existing codes
     const codesData = readCodes()
+    
+    // Check for conflicts/duplicates
+    if (isCodeDuplicate(codesData.codes, code)) {
+      return NextResponse.json(
+        { 
+          error: 'Verification code already exists',
+          code: code,
+          message: 'This verification code conflicts with an existing entry'
+        },
+        { status: 409 }
+      )
+    }
     
     // Add new code with metadata
     const newCode = {
