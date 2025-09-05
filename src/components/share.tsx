@@ -29,7 +29,7 @@ const Share = () => {
               />
               
               {/* HTML Text Overlay with Tailwind Absolute Positioning */}
-              <p className="absolute bottom-2 left-1/2 transform -translate-x-1/2 text-lg sm:text-2xl font-extrabold text-yellow-300 text-center">
+              <p className="absolute bottom-0 left-1/2 transform -translate-x-1/2 text-xs sm:text-2xl font-extrabold text-yellow-300 text-center">
                 {referralCode}
               </p>
             </div>
