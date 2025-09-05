@@ -10,43 +10,43 @@ const ReferralForm = () => {
 
   const handleSubmit = async () => {
     setIsLoading(true)
-    
+
     try {
       if (!email) {
-        throw new Error("Email is empty. Cannot continue forward until we have a email")
+        throw new Error("Please enter an email address")
       }
 
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-        throw new Error("Invalid email")
-      } 
-      
-      generateReferralCode()
-      
-      let referralCode = getReferralCode()
-      
+        throw new Error("Invalid email format")
+      }
+
       let attempts = 0
       const maxAttempts = 5
-      let result = null
-      
-      while (attempts < maxAttempts) {
-        result = await addVerificationCode(referralCode, email)
-        
-        if (result.error === 'Verification code already exists') {
-          throw new Error('Code conflict detected, regenerating...')
+      let success = false
+
+      while (attempts < maxAttempts && !success) {
+        attempts++
+        generateReferralCode()
+        const referralCode = getReferralCode()
+
+        const result = await addVerificationCode(referralCode, email)
+
+        if (result?.success) {
+          success = true
+          switchScreen('share')
+        } else if (result?.error === 'Verification code already exists') {
+          // retry with new code
+          continue
         } else {
-          throw new Error(`Failed to save verification code: ${result.error}`)
+          throw new Error(result?.error || 'Unknown error occurred')
         }
       }
-      
-      if (attempts >= maxAttempts) {
-        throw new Error('Unable to generate a unique verification code. Please try again.')
+
+      if (!success) {
+        throw new Error('Unable to generate a unique referral code. Please try again.')
       }
-      
-      switchScreen('share')
     } catch (error) {
-      if (error instanceof Error) {
-        alert(error.message)
-      }
+      alert(error instanceof Error ? error.message : 'Something went wrong')
     } finally {
       setIsLoading(false)
     }
@@ -57,7 +57,7 @@ const ReferralForm = () => {
       <h1 className="text-2xl md:text-3xl font-bold text-black mb-6">
         Create Your Referral Code
       </h1>
-      
+
       <div className="mb-6">
         <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
           Email Address
@@ -68,11 +68,11 @@ const ReferralForm = () => {
           name="email"
           value={email}
           onChange={(event) => setEmail(event.target.value)}
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-black"
+          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
           placeholder="Enter your email address"
         />
       </div>
-        
+
       <Button onClick={handleSubmit}>
         {isLoading ? 'Creating...' : 'Create my referral code'}
       </Button>
