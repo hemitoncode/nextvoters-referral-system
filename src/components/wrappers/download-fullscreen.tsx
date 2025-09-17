@@ -1,15 +1,43 @@
 import React from 'react'
 import Image from 'next/image'
+import html2canvas from 'html2canvas'
 
 interface DownloadFullScreenWrapperProps {
     referralCode: string | null
     fullScreenRef: React.RefObject<HTMLDivElement | null>
     setIsFullScreen: React.Dispatch<React.SetStateAction<boolean>>
-    handleDownload: () => Promise<void>
 }
 
-const DownloadFullScreenWrapper: React.FC<DownloadFullScreenWrapperProps> = ({ referralCode, fullScreenRef, setIsFullScreen, handleDownload }) => {
-  return (
+const DownloadFullScreenWrapper: React.FC<DownloadFullScreenWrapperProps> = ({ referralCode, fullScreenRef, setIsFullScreen }) => {
+    const handleDownload = async () => {
+        if (!fullScreenRef?.current) return
+    
+        try {      
+        const canvas = await html2canvas(fullScreenRef.current, {
+            backgroundColor: '#000000',
+            scale: 2,
+            useCORS: true,
+            allowTaint: true,
+            foreignObjectRendering: false,
+            imageTimeout: 15000,
+            logging: false,
+            width: fullScreenRef.current.offsetWidth,
+            height: fullScreenRef.current.offsetHeight,
+            scrollX: 0,
+            scrollY: 0,
+        })
+        
+        const link = document.createElement('a')
+        link.download = `referral-${referralCode || 'image'}.png`
+        link.href = canvas.toDataURL('image/png', 0.95)
+        link.click()
+        } catch (error) {
+        console.error('Error generating image:', error)
+        alert('Failed to download image. Please try taking a screenshot instead.')
+        }
+    }
+
+    return (
         <div className="fixed inset-0 z-50" style={{ backgroundColor: '#000000' }}>
           {/* Capture area - this is what gets downloaded */}
           <div

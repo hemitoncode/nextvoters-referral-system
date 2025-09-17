@@ -11,34 +11,6 @@ const LinkedInShare: React.FC<LinkedInShareProps> = ({ referralCode }) => {
   const [isFullScreen, setIsFullScreen] = useState(false)
   const fullScreenRef = useRef<HTMLDivElement | null>(null)
 
-  const handleDownload = async () => {
-    if (!fullScreenRef.current) return
-    
-    try {      
-      const canvas = await html2canvas(fullScreenRef.current, {
-        backgroundColor: '#000000',
-        scale: 2,
-        useCORS: true,
-        allowTaint: true,
-        foreignObjectRendering: false,
-        imageTimeout: 15000,
-        logging: false,
-        width: fullScreenRef.current.offsetWidth,
-        height: fullScreenRef.current.offsetHeight,
-        scrollX: 0,
-        scrollY: 0,
-      })
-      
-      const link = document.createElement('a')
-      link.download = `referral-${referralCode || 'image'}.png`
-      link.href = canvas.toDataURL('image/png', 0.95)
-      link.click()
-    } catch (error) {
-      console.error('Error generating image:', error)
-      alert('Failed to download image. Please try taking a screenshot instead.')
-    }
-  }
-
   return (
     <div>
       {/* Fullscreen overlay */}
@@ -47,7 +19,6 @@ const LinkedInShare: React.FC<LinkedInShareProps> = ({ referralCode }) => {
           referralCode={referralCode} 
           fullScreenRef={fullScreenRef} 
           setIsFullScreen={setIsFullScreen} 
-          handleDownload={handleDownload} 
         />
       )}
 
