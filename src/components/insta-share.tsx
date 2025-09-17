@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useRef, useState } from 'react'
 import Image from 'next/image'
 
 interface InstaShareProps {
@@ -6,6 +6,9 @@ interface InstaShareProps {
 }
 
 const InstaShare: React.FC<InstaShareProps> = ({ referralCode }) => {
+  const [isFullScreen, setIsFullScreen] = useState(false)
+  const fullScreenRef = useRef<HTMLDivElement | null>(null)
+
   return (
     <div className="max-w-4xl w-full mx-auto">
       <div className="relative w-full rounded-lg overflow-hidden mb-6 bg-gray-100">
