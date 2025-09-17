@@ -106,24 +106,21 @@ const DownloadFullScreenWrapper: React.FC<DownloadFullScreenWrapperProps> = ({
           unoptimized={true}
         />
         {referralCode && (
-          <div className="absolute inset-0 flex items-end justify-center">
-            <div 
-              className="px-2 rounded-lg"
-            >
+          <div className="absolute inset-0 flex items-end justify-center pb-6">
+            <div className="px-2 rounded-lg">
               <p
-                className="font-bold text-center"
+                className="font-bold text-center leading-none"
                 style={{ 
                   color: '#fcd34d',
-                  fontSize: 44
+                  fontSize: 'clamp(20px, 5vw, 44px)'  // responsive size
                 }}
               >
                 {referralCode}
               </p>
-              <br></br>
-
             </div>
           </div>
         )}
+
       </div>
 
       {/* Control buttons - outside capture area */}
