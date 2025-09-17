@@ -77,33 +77,13 @@ const DownloadFullScreenWrapper: React.FC<DownloadFullScreenWrapperProps> = ({ r
           <div className="absolute top-4 right-4 flex gap-2 z-10">
             <button
               onClick={() => setIsFullScreen(false)}
-              className="px-6 py-2 rounded-md font-semibold"
-              style={{ 
-                backgroundColor: '#ffffff', 
-                color: '#000000' 
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = '#f3f4f6'
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = '#ffffff'
-              }}
+              className="px-6 py-2 rounded-md font-semibold bg-white text-black cursor-pointer"
             >
               Close
             </button>
             <button
               onClick={handleDownload}
-              className="px-6 py-2 rounded-md font-semibold"
-              style={{ 
-                backgroundColor: '#16a34a', 
-                color: '#ffffff' 
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = '#15803d'
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = '#16a34a'
-              }}
+              className="px-6 py-2 rounded-md font-semibold bg-[#16a34a] cursor-pointer"
             >
               Download
             </button>
