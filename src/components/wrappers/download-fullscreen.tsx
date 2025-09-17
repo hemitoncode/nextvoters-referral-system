@@ -1,7 +1,6 @@
 import React from 'react'
 import Image from 'next/image'
 import html2canvas from 'html2canvas'
-import { image } from 'html2canvas/dist/types/css/types/image'
 
 interface DownloadFullScreenWrapperProps {
     referralCode: string | null
