@@ -22,11 +22,11 @@ const LinkedInShare: React.FC<LinkedInShareProps> = ({ referralCode }) => {
         scale: 2,
         useCORS: true,
         allowTaint: true,
-        foreignObjectRendering: false, // helps with Next.js images
-        imageTimeout: 15000, // wait longer for images
+        foreignObjectRendering: false,
+        imageTimeout: 15000,
         logging: false,
-        width: window.innerWidth,
-        height: window.innerHeight,
+        width: fullScreenRef.current.offsetWidth,
+        height: fullScreenRef.current.offsetHeight,
         scrollX: 0,
         scrollY: 0,
       })
@@ -42,40 +42,49 @@ const LinkedInShare: React.FC<LinkedInShareProps> = ({ referralCode }) => {
   }
 
   return (
-    <>
+    <div>
       {/* Fullscreen overlay */}
       {isFullScreen && (
-        <div
-          ref={fullScreenRef}
-          className="fixed inset-0 z-50"
-          style={{ backgroundColor: '#000000' }}
-        >
-          <div className="relative w-full h-full">
-            <Image
-              src="/referral-graphic.png"
-              alt="Next Voters Fellowship Background"
-              fill
-              className="object-contain"
-              priority
-              unoptimized={true}
-            />
-            {referralCode && (
-              <div className="absolute inset-0 flex items-end justify-center pb-8">
-                <div 
-                  className="px-5 py-2 rounded-md"
-                  style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}
-                >
-                  <p 
-                    className="text-2xl sm:text-4xl font-semibold text-center"
-                    style={{ color: '#fcd34d' }}
+        <div className="fixed inset-0 z-50" style={{ backgroundColor: '#000000' }}>
+          {/* Capture area - this is what gets downloaded */}
+          <div
+            ref={fullScreenRef}
+            className="absolute inset-0"
+            style={{ 
+              backgroundColor: '#000000',
+              width: '100vw',
+              height: '100vh'
+            }}
+          >
+            <div className="relative w-full h-full">
+              <Image
+                src="/referral-graphic.png"
+                alt="Next Voters Fellowship Background"
+                fill
+                className="object-contain"
+                priority
+                unoptimized={true}
+              />
+              {referralCode && (
+                <div className="absolute inset-0 flex items-end justify-center pb-8">
+                  <div 
+                    className="px-5 py-2 rounded-md"
+                    style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}
                   >
-                    {referralCode}
-                  </p>
+                    <p 
+                      className="text-2xl sm:text-4xl font-semibold text-center"
+                      style={{ color: '#fcd34d' }}
+                    >
+                      {referralCode}
+                    </p>
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
+            </div>
           </div>
-          <div className="absolute top-4 right-4 flex gap-2">
+
+          {/* Control buttons - outside capture area */}
+          <div className="absolute top-4 right-4 flex gap-2 z-10">
             <button
               onClick={() => setIsFullScreen(false)}
               className="px-6 py-2 rounded-md font-semibold"
@@ -137,7 +146,6 @@ const LinkedInShare: React.FC<LinkedInShareProps> = ({ referralCode }) => {
                 >
                   <p 
                     className="text-base sm:text-lg md:text-2xl font-semibold text-center"
-                    style={{ color: '#fcd34d' }}
                   >
                     {referralCode}
                   </p>
@@ -179,7 +187,7 @@ const LinkedInShare: React.FC<LinkedInShareProps> = ({ referralCode }) => {
           </div>
         </div>
       )}
-    </>
+    </div>
   )
 }
 
