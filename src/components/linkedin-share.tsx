@@ -18,6 +18,7 @@ const LinkedInShare: React.FC<LinkedInShareProps> = ({ referralCode }) => {
           referralCode={referralCode} 
           fullScreenRef={fullScreenRef} 
           setIsFullScreen={setIsFullScreen} 
+          imageName="/referral-graphic.png"
         />
       )}
 

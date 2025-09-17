@@ -1,14 +1,16 @@
 import React from 'react'
 import Image from 'next/image'
 import html2canvas from 'html2canvas'
+import { image } from 'html2canvas/dist/types/css/types/image'
 
 interface DownloadFullScreenWrapperProps {
     referralCode: string | null
     fullScreenRef: React.RefObject<HTMLDivElement | null>
     setIsFullScreen: React.Dispatch<React.SetStateAction<boolean>>
+    imageName: string
 }
 
-const DownloadFullScreenWrapper: React.FC<DownloadFullScreenWrapperProps> = ({ referralCode, fullScreenRef, setIsFullScreen }) => {
+const DownloadFullScreenWrapper: React.FC<DownloadFullScreenWrapperProps> = ({ referralCode, fullScreenRef, setIsFullScreen, imageName }) => {
     const handleDownload = async () => {
         if (!fullScreenRef?.current) return
     
@@ -51,7 +53,7 @@ const DownloadFullScreenWrapper: React.FC<DownloadFullScreenWrapperProps> = ({ r
           >
             <div className="relative w-full h-full">
               <Image
-                src="/referral-graphic.png"
+                src={imageName}
                 alt="Next Voters Fellowship Background"
                 fill
                 className="object-contain"

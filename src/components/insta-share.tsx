@@ -18,6 +18,7 @@ const InstaShare: React.FC<InstaShareProps> = ({ referralCode }) => {
           referralCode={referralCode} 
           fullScreenRef={fullScreenRef} 
           setIsFullScreen={setIsFullScreen} 
+          imageName="/referral-graphic-small.png"
         />
       )}
 
