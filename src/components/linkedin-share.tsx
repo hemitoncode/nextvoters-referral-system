@@ -1,6 +1,4 @@
 import React, { useState, useRef } from 'react'
-import Image from 'next/image'
-import html2canvas from 'html2canvas'
 import DownloadFullScreenWrapper from './wrappers/download-fullscreen'
 import NormalView from './ui/normal-view'
 
