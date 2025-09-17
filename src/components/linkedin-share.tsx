@@ -68,8 +68,7 @@ const LinkedInShare: React.FC<LinkedInShareProps> = ({ referralCode }) => {
               {referralCode && (
                 <div className="absolute inset-0 flex items-end justify-center pb-8">
                   <div 
-                    className="px-5 py-2 rounded-md"
-                    style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}
+                    className="py-14 rounded-md"
                   >
                     <p 
                       className="text-2xl sm:text-4xl font-semibold text-center"
