@@ -7,7 +7,7 @@ interface NormalViewProps {
 const NormalView: React.FC<NormalViewProps> = ({ setIsFullScreen }) => {
   return (
     <div className='w-full'>
-        <div className="flex justify-center items-center min-h-[200px]">
+        <div className="flex flex-col justify-center items-center min-h-[200px]">
         <button
             onClick={() => setIsFullScreen(true)}
             className="group relative px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 transform hover:scale-105 hover:shadow-2xl bg-blue-500 cursor-pointer"
@@ -18,8 +18,12 @@ const NormalView: React.FC<NormalViewProps> = ({ setIsFullScreen }) => {
             </svg>
                 View your downloadable certificate!
             </span>
-            
         </button>
+        
+        <div className="space-y-2 mb-6 text-center text-gray-600 pt-5">
+            <p className="text-sm">📸 Download your very own certificate!</p>
+            <p className="text-sm">💡 Share on your socials!</p>
+        </div>
         </div>
     </div>
   )
