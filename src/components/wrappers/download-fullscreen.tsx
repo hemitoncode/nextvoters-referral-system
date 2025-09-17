@@ -106,19 +106,21 @@ const DownloadFullScreenWrapper: React.FC<DownloadFullScreenWrapperProps> = ({
           unoptimized={true}
         />
         {referralCode && (
-          <div className="absolute inset-0 flex items-end justify-center" style={{ paddingBottom: '5%' }}>
+          <div className="absolute inset-0 flex items-end justify-center">
             <div 
-              className="px-4 py-2 rounded-lg"
+              className="px-2 rounded-lg"
             >
               <p
                 className="font-bold text-center"
                 style={{ 
                   color: '#fcd34d',
-                  fontSize: `${Math.max(16, Math.min(48, parseInt(displayDimensions.width) * 0.04))}px`
+                  fontSize: 44
                 }}
               >
                 {referralCode}
               </p>
+              <br></br>
+
             </div>
           </div>
         )}
