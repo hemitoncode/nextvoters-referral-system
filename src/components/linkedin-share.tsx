@@ -13,10 +13,7 @@ const LinkedInShare: React.FC<LinkedInShareProps> = ({ referralCode }) => {
   const handleDownload = async () => {
     if (!fullScreenRef.current) return
     
-    try {
-      // Wait a bit for images to load
-      await new Promise(resolve => setTimeout(resolve, 1000))
-      
+    try {      
       const canvas = await html2canvas(fullScreenRef.current, {
         backgroundColor: '#000000',
         scale: 2,
@@ -67,9 +64,7 @@ const LinkedInShare: React.FC<LinkedInShareProps> = ({ referralCode }) => {
               />
               {referralCode && (
                 <div className="absolute inset-0 flex items-end justify-center pb-8">
-                  <div 
-                    className="py-14 rounded-md"
-                  >
+                  <div className="py-10 rounded-md">
                     <p 
                       className="text-2xl sm:text-4xl font-semibold text-center"
                       style={{ color: '#fcd34d' }}
