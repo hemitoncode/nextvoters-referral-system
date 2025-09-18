@@ -113,7 +113,7 @@ const Share = () => {
             priority
             unoptimized={true}
           />
-          <div className="absolute inset-0 flex items-end justify-center pb-[57px] left-72">
+          <div className={shareType === "linkedin" ? `absolute inset-0 flex items-end justify-center pb-[57px] left-72` : `absolute inset-0 flex items-end justify-center pb-[155px] left-40`}>  
             <div className="px-4 rounded-lg">
               <p
                 className="font-bold text-center leading-none"
