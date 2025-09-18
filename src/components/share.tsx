@@ -8,9 +8,6 @@ const Share = () => {
   const referralCode = getReferralCode()
   const [shareType, setShareType] = useState<ShareType>("linkedin")
   const fullScreenRef = useRef<HTMLDivElement | null>(null) 
-  const handleToggleShare = () => {
-    setShareType(shareType === "linkedin" ? "instagram" : "linkedin")
-  }
 
   return (
     <div className="max-w-4xl w-full">      
@@ -22,12 +19,12 @@ const Share = () => {
             fullScreenRef={fullScreenRef} 
             imageName="/referral-graphic.png"
           />          
-      ) : (
-        <DownloadFullScreenWrapper 
-          referralCode={referralCode} 
-          fullScreenRef={fullScreenRef} 
-          imageName="/referral-graphic-small.png"
-        />          
+        ) : (
+          <DownloadFullScreenWrapper 
+            referralCode={referralCode} 
+            fullScreenRef={fullScreenRef} 
+            imageName="/referral-graphic-small.png"
+          />          
         )}
         </>
       ) : (
