@@ -5,14 +5,12 @@ import html2canvas from 'html2canvas'
 interface DownloadFullScreenWrapperProps {
   referralCode: string | null
   fullScreenRef: React.RefObject<HTMLDivElement | null>
-  setIsFullScreen: React.Dispatch<React.SetStateAction<boolean>>
   imageName: string
 }
 
 const DownloadFullScreenWrapper: React.FC<DownloadFullScreenWrapperProps> = ({ 
   referralCode, 
   fullScreenRef, 
-  setIsFullScreen, 
   imageName 
 }) => {
   const [imageDimensions, setImageDimensions] = useState({ width: 0, height: 0 })
@@ -125,12 +123,6 @@ const DownloadFullScreenWrapper: React.FC<DownloadFullScreenWrapperProps> = ({
 
       {/* Control buttons - outside capture area */}
       <div className="absolute top-4 right-4 flex gap-2 z-10">
-        <button
-          onClick={() => setIsFullScreen(false)}
-          className="px-4 py-2 rounded-lg font-semibold bg-white text-black hover:bg-gray-100 transition-colors shadow-lg"
-        >
-          Close
-        </button>
         <button
           onClick={handleDownload}
           className="px-4 py-2 rounded-lg font-semibold text-white hover:bg-green-700 transition-colors shadow-lg"

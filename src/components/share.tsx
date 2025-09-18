@@ -1,14 +1,13 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import Button from './ui/button'
 import { getReferralCode } from '@/lib/referral-utils'
 import { ShareType } from '@/types/share'
-import LinkedInShare from './linkedin-share'
-import InstaShare from './insta-share'
+import DownloadFullScreenWrapper from './wrappers/download-fullscreen'
 
 const Share = () => {
   const referralCode = getReferralCode()
   const [shareType, setShareType] = useState<ShareType>("linkedin")
-
+  const fullScreenRef = useRef<HTMLDivElement | null>(null) 
   const handleToggleShare = () => {
     setShareType(shareType === "linkedin" ? "instagram" : "linkedin")
   }
@@ -18,26 +17,23 @@ const Share = () => {
       {referralCode ? (
         <>
           {shareType === "linkedin" ? (
-            <LinkedInShare referralCode={referralCode} />
-          ) : (
-            <InstaShare referralCode={referralCode} />
-          )}
+          <DownloadFullScreenWrapper 
+            referralCode={referralCode} 
+            fullScreenRef={fullScreenRef} 
+            imageName="/referral-graphic.png"
+          />          
+      ) : (
+        <DownloadFullScreenWrapper 
+          referralCode={referralCode} 
+          fullScreenRef={fullScreenRef} 
+          imageName="/referral-graphic-small.png"
+        />          
+        )}
         </>
       ) : (
         <p className="text-gray-600">No referral code generated yet.</p>
       )}
 
-      <Button onClick={handleToggleShare} className="w-full">
-        {shareType === "linkedin" ? (
-          <>
-            Share on Instagram
-          </>
-        ) : (
-          <>
-            Share on LinkedIn
-          </>
-        )}
-      </Button>
     </div>
   )
 }
