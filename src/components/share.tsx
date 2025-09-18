@@ -119,7 +119,7 @@ const Share = () => {
                 className="font-bold text-center leading-none"
                 style={{ 
                   color: '#fcd34d',
-                  fontSize: 'clamp(20px, 5vw, 30px)'  // responsive size
+                  fontSize: 'clamp(20px, 5vw, 30px)'  
                 }}
               >
                 {referralCode}
