@@ -134,7 +134,7 @@ const Share = () => {
             onClick={handleToggleShare}
             className="px-4 py-2 rounded-lg font-semibold hover:bg-gray-400 transition-colors shadow-lg bg-white text-black"
           >
-            Toggle to small banner
+            {shareType === "linkedin" ? "View the Instagram banner" : "View the LinkedIn banner"}
           </button>
 
           <button
