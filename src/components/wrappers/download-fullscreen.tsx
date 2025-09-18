@@ -1,19 +1,23 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import Image from 'next/image'
 import html2canvas from 'html2canvas'
+import { ShareType } from '@/types/share'
 
 interface DownloadFullScreenWrapperProps {
   referralCode: string | null
-  fullScreenRef: React.RefObject<HTMLDivElement | null>
-  imageName: string
 }
 
 const DownloadFullScreenWrapper: React.FC<DownloadFullScreenWrapperProps> = ({ 
   referralCode, 
-  fullScreenRef, 
-  imageName 
 }) => {
+  const [shareType, setShareType] = useState<ShareType>("linkedin")
   const [imageDimensions, setImageDimensions] = useState({ width: 0, height: 0 })
+  const fullScreenRef = useRef<HTMLDivElement | null>(null) 
+  const imageName = shareType === "linkedin" ? "/referral-graphic.png" : "/referral-graphic-small.png"
+
+  const handleToggleShare = () => {
+    setShareType(shareType === "linkedin" ? "instagram" : "linkedin")
+  }
 
   useEffect(() => {
     const img = new window.Image()
@@ -120,13 +124,19 @@ const DownloadFullScreenWrapper: React.FC<DownloadFullScreenWrapperProps> = ({
         )}
 
       </div>
-
+      
       {/* Control buttons - outside capture area */}
       <div className="absolute top-4 right-4 flex gap-2 z-10">
         <button
+          onClick={handleToggleShare}
+          className="px-4 py-2 rounded-lg font-semibold hover:bg-gray-400 transition-colors shadow-lg bg-white text-black"
+        >
+          Toggle to small banner
+        </button>
+
+        <button
           onClick={handleDownload}
-          className="px-4 py-2 rounded-lg font-semibold text-white hover:bg-green-700 transition-colors shadow-lg"
-          style={{ backgroundColor: '#16a34a' }}
+          className="px-4 py-2 rounded-lg font-semibold text-white hover:bg-green-700 transition-colors shadow-lg bg-[#16a34a]"
         >
           Download
         </button>
