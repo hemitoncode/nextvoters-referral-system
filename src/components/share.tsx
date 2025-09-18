@@ -71,12 +71,12 @@ const Share = () => {
 
     if (imageAspectRatio > screenAspectRatio) {
       // Image is wider than screen ratio - fit to width
-      const width = Math.min(window.innerWidth * 0.9, imageDimensions.width)
+      const width = Math.min(window.innerWidth * 0.75, imageDimensions.width)
       const height = width / imageAspectRatio
       return { width: `${width}px`, height: `${height}px` }
     } else {
       // Image is taller than screen ratio - fit to height
-      const height = Math.min(window.innerHeight * 0.9, imageDimensions.height)
+      const height = Math.min(window.innerHeight * 0.75, imageDimensions.height)
       const width = height * imageAspectRatio
       return { width: `${width}px`, height: `${height}px` }
     }
@@ -113,7 +113,7 @@ const Share = () => {
             priority
             unoptimized={true}
           />
-          <div className="absolute inset-0 flex items-end justify-center pb-[70px] left-80">
+          <div className="absolute inset-0 flex items-end justify-center pb-[57px] left-72">
             <div className="px-4 rounded-lg">
               <p
                 className="font-bold text-center leading-none"
