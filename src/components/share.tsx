@@ -71,12 +71,12 @@ const Share = () => {
 
     if (imageAspectRatio > screenAspectRatio) {
       // Image is wider than screen ratio - fit to width
-      const width = Math.min(window.innerWidth * 0.75, imageDimensions.width)
+      const width = Math.min(window.innerWidth * 0.9, imageDimensions.width)
       const height = width / imageAspectRatio
       return { width: `${width}px`, height: `${height}px` }
     } else {
       // Image is taller than screen ratio - fit to height
-      const height = Math.min(window.innerHeight * 0.75, imageDimensions.height)
+      const height = Math.min(window.innerHeight * 0.9, imageDimensions.height)
       const width = height * imageAspectRatio
       return { width: `${width}px`, height: `${height}px` }
     }
@@ -113,13 +113,18 @@ const Share = () => {
             priority
             unoptimized={true}
           />
-          <div className={shareType === "linkedin" ? `absolute inset-0 flex items-end justify-center pb-[57px] left-72` : `absolute inset-0 flex items-end justify-center pb-[155px] left-40`}>  
-            <div className="px-4 rounded-lg">
+          <div className="absolute inset-0 flex items-end justify-center 
+            pb-[40px] pl-0 
+            sm:pb-[50px] sm:pl-20 
+            md:pb-[60px] md:pl-40 
+            lg:pb-[72px] lg:pl-96"
+>
+            <div className="px-2 rounded-lg">
               <p
                 className="font-bold text-center leading-none"
                 style={{ 
                   color: '#fcd34d',
-                  fontSize: 'clamp(20px, 5vw, 30px)'  
+                  fontSize: 'clamp(10px, 5vw, 30px)'  // responsive size
                 }}
               >
                 {referralCode}
@@ -134,7 +139,7 @@ const Share = () => {
             onClick={handleToggleShare}
             className="px-4 py-2 rounded-lg font-semibold hover:bg-gray-400 transition-colors shadow-lg bg-white text-black"
           >
-            {shareType === "linkedin" ? "View the Instagram banner" : "View the LinkedIn banner"}
+            Toggle to small banner
           </button>
 
           <button
