@@ -60,26 +60,33 @@ const Share = () => {
     }
   }
 
-  // Calculate display dimensions that fit the screen while maintaining aspect ratio
+  // Calculate display dimensions - bigger size, scrollable on mobile
   const getDisplayDimensions = () => {
     if (!imageDimensions.width || !imageDimensions.height) {
-      return { width: '90vw', height: '90vh' }
+      return { width: '100vw', height: '100vh' }
     }
 
     const imageAspectRatio = imageDimensions.width / imageDimensions.height
-    const screenAspectRatio = window.innerWidth / window.innerHeight
-
-    if (imageAspectRatio > screenAspectRatio) {
-      // Image is wider than screen ratio - fit to width
-      const width = Math.min(window.innerWidth * 0.9, imageDimensions.width)
-      const height = width / imageAspectRatio
-      return { width: `${width}px`, height: `${height}px` }
-    } else {
-      // Image is taller than screen ratio - fit to height
-      const height = Math.min(window.innerHeight * 0.9, imageDimensions.height)
-      const width = height * imageAspectRatio
-      return { width: `${width}px`, height: `${height}px` }
+    
+    // On mobile (< 768px), use larger fixed dimensions that may require scrolling
+    if (window.innerWidth < 768) {
+      const baseWidth = Math.max(imageDimensions.width * 0.8, 400)
+      const height = baseWidth / imageAspectRatio
+      return { width: `${baseWidth}px`, height: `${height}px` }
     }
+    
+    // On desktop, make it bigger but still fit reasonably
+    const maxWidth = Math.min(window.innerWidth * 0.95, imageDimensions.width * 1.2)
+    const height = maxWidth / imageAspectRatio
+    const maxHeight = window.innerHeight * 0.95
+    
+    if (height > maxHeight) {
+      const adjustedHeight = maxHeight
+      const adjustedWidth = adjustedHeight * imageAspectRatio
+      return { width: `${adjustedWidth}px`, height: `${adjustedHeight}px` }
+    }
+    
+    return { width: `${maxWidth}px`, height: `${height}px` }
   }
 
   if (!referralCode) {
@@ -94,15 +101,17 @@ const Share = () => {
 
   return (
     <div className="max-w-4xl w-full">
-      <div className="fixed inset-0 z-50 bg-black flex items-center justify-center">
+      <div className="fixed inset-0 z-50 bg-black flex items-center justify-center overflow-auto">
         {/* Capture area - this is what gets downloaded */}
         <div
           ref={fullScreenRef}
-          className="relative flex-shrink-0"
+          className="relative flex-shrink-0 my-4 mx-2"
           style={{
             width: displayDimensions.width,
             height: displayDimensions.height,
-            backgroundColor: 'transparent'
+            backgroundColor: 'transparent',
+            minWidth: displayDimensions.width,
+            minHeight: displayDimensions.height
           }}
         >
           <Image
@@ -114,30 +123,30 @@ const Share = () => {
             unoptimized={true}
           />
           <div className={shareType === "linkedin" ? `
-              absolute inset-0 flex items-end justify-center 
-              pb-[15px] pl-25 
-              md:pb-[60px] md:pl-40 
-              lg:pb-[72px] lg:pl-96
-            ` : `
-              absolute inset-0 flex items-end justify-center 
-              pb-[116px] pl-20
-              md:pb-[30px] md:pl-10 
-              lg:pb-[190px] lg:pl-40
-            `
-            }
-            >
-            <div className="px-2 rounded-lg">
-              <p
-                className="font-bold text-center leading-none text-sm sm:text-base md:text-lg lg:text-xl text-[#fcd34d]"
-              >
-                {referralCode}
-              </p>
-            </div>
+          absolute inset-0 flex items-end justify-center
+          pb-[15px] pl-25
+          md:pb-[100px] md:pl-20
+          lg:pb-[20] lg:pl-96
+          ` : `
+          absolute inset-0 flex items-end justify-center
+          pb-[158px] pl-24
+          md:pb-[100px] md:pl-10
+          lg:pb-[190px] lg:pl-40
+          `
+          }
+          >
+          <div className="px-2 rounded-lg">
+          <p
+          className="font-bold text-center leading-none text-[#fcd34d] text-lg md:text-xl lg:text-2xl"
+          >
+          {referralCode}
+          </p>
+          </div>
           </div>
         </div>
         
-        {/* Control buttons - outside capture area */}
-        <div className="absolute top-4 right-4 flex gap-2 z-10">
+        {/* Control buttons - fixed position, outside capture area */}
+        <div className="fixed top-4 right-4 flex gap-2 z-10">
           <button
             onClick={handleToggleShare}
             className="px-4 py-2 rounded-lg font-semibold hover:bg-gray-400 transition-colors shadow-lg bg-white text-black"
