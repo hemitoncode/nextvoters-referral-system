@@ -130,7 +130,7 @@ const Share = () => {
           ` : `
           absolute inset-0 flex items-end justify-center
           pb-[158px] pl-24
-          md:pb-[100px] md:pl-10
+          md:pb-[180px] md:pl-32
           lg:pb-[190px] lg:pl-40
           `
           }
