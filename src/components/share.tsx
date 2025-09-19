@@ -115,26 +115,20 @@ const Share = () => {
           />
           <div className={shareType === "linkedin" ? `
               absolute inset-0 flex items-end justify-center 
-              pb-[40px] pl-0 
-              sm:pb-[50px] sm:pl-20 
+              pb-[15px] pl-25 
               md:pb-[60px] md:pl-40 
               lg:pb-[72px] lg:pl-96
             ` : `
               absolute inset-0 flex items-end justify-center 
-              pb-[32px] pl-0 
-              sm:pb-[40px] sm:pl-10 
-              md:pb-[50px] md:pl-10 
+              pb-[116px] pl-20
+              md:pb-[30px] md:pl-10 
               lg:pb-[190px] lg:pl-40
             `
             }
             >
             <div className="px-2 rounded-lg">
               <p
-                className="font-bold text-center leading-none"
-                style={{ 
-                  color: '#fcd34d',
-                  fontSize: 'clamp(10px, 5vw, 30px)'  // responsive size
-                }}
+                className="font-bold text-center leading-none text-sm sm:text-base md:text-lg lg:text-xl text-[#fcd34d]"
               >
                 {referralCode}
               </p>
