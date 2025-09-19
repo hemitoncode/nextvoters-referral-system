@@ -28,8 +28,6 @@ const Share = () => {
     if (!fullScreenRef?.current) return
     
     try {
-      // Wait for image to load
-      await new Promise(resolve => setTimeout(resolve, 1000))
       
       const element = fullScreenRef.current
       const rect = element.getBoundingClientRect()
@@ -124,14 +122,10 @@ const Share = () => {
           />
           <div className={shareType === "linkedin" ? `
           absolute inset-0 flex items-end justify-center
-          pb-[15px] pl-25
-          md:pb-[100px] md:pl-20
-          lg:pb-[20] lg:pl-96
+          pb-[80px] lg:pl-80
           ` : `
           absolute inset-0 flex items-end justify-center
-          pb-[158px] pl-24
-          md:pb-[180px] md:pl-32
-          lg:pb-[190px] lg:pl-40
+          pb-[202px] pl-36
           `
           }
           >
