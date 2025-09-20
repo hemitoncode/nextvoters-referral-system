@@ -2,20 +2,18 @@ import React, { useEffect } from 'react'
 
 const Share = () => {
   useEffect(() => {
-    const handleDownload = async () => {
+    const downloadBothImages = async () => {
       try {
-        const res = await fetch("/api/image", { // Make sure this matches your API route
+        const res = await fetch("/api/image", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            referralCode: "ABC123",
-            type: "insta",
+            referralCode: "ABC123"
           }),
         });
 
-        // Check if the response is OK
         if (!res.ok) {
           const errorText = await res.text();
           console.error('API Error:', errorText);
@@ -23,36 +21,34 @@ const Share = () => {
           return;
         }
 
-        // Check if the response is actually an image
-        const contentType = res.headers.get('content-type');
-        if (!contentType || !contentType.includes('image')) {
-          const errorText = await res.text();
-          console.error('Not an image response:', errorText);
-          alert('Server returned an error instead of an image');
+        const data = await res.json();
+        
+        if (!data.success || !data.images) {
+          console.error('Invalid response format:', data);
+          alert('Invalid response from server');
           return;
         }
 
-        const blob = await res.blob();
-        
-        // Verify the blob is not empty
-        if (blob.size === 0) {
-          console.error('Empty blob received');
-          alert('Received empty image file');
-          return;
-        }
+        // Download LinkedIn image
+        const linkedinLink = document.createElement('a');
+        linkedinLink.href = data.images.linkedin.data;
+        linkedinLink.download = data.images.linkedin.filename;
+        document.body.appendChild(linkedinLink);
+        linkedinLink.click();
+        document.body.removeChild(linkedinLink);
 
-        const url = URL.createObjectURL(blob);
-        
-        // Create download link and trigger download
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = `referral-ABC123.png`;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        
-        // Clean up the object URL
-        URL.revokeObjectURL(url);
+        // Small delay before second download
+        setTimeout(() => {
+          // Download Instagram image
+          const instaLink = document.createElement('a');
+          instaLink.href = data.images.instagram.data;
+          instaLink.download = data.images.instagram.filename;
+          document.body.appendChild(instaLink);
+          instaLink.click();
+          document.body.removeChild(instaLink);
+        }, 500);
+
+        console.log('Both images downloaded successfully!');
         
       } catch (error) {
         console.error('Download failed:', error);
@@ -60,11 +56,14 @@ const Share = () => {
       }
     }
     
-    handleDownload();
+    downloadBothImages();
   }, [])
 
   return (
-    <div>Share</div>
+    <div className='text-black'>
+      <h2>Downloading both referral images...</h2>
+      <p>LinkedIn and Instagram images will download automatically.</p>
+    </div>
   )
 }
 

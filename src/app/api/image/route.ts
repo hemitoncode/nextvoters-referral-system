@@ -4,28 +4,31 @@ import path from 'path';
 import fs from "fs";
 
 export async function POST(req: NextRequest) {
-  const { referralCode, type } = await req.json();
+  const { referralCode } = await req.json();
   
-  if (!referralCode || !type) {
-    return NextResponse.json({ error: 'Missing referralCode or type in request body.' }, { status: 400 });
+  if (!referralCode) {
+    return NextResponse.json({ error: 'Missing referralCode in request body.' }, { status: 400 });
   }
 
-  const imagePath = path.join(process.cwd(), 'public', type === "insta" ? "referral-graphic-small.png" : "referral-graphic.png");
-  
+  const linkedinImagePath = path.join(process.cwd(), 'public', "referral-graphic.png");
+  const instaImagePath = path.join(process.cwd(), 'public', "referral-graphic-small.png");
+
   try {
-    if (!fs.existsSync(imagePath)) {
-      return NextResponse.json({ error: `Image file not found: ${imagePath}` }, { status: 404 });
+    // Check if both files exist
+    if (!fs.existsSync(linkedinImagePath) || !fs.existsSync(instaImagePath)) {
+      return NextResponse.json({ error: 'Base image files are missing on the server.' }, { status: 500 });
     }
 
-    const imageBuffer = fs.readFileSync(imagePath);
-    const metadata = await sharp(imageBuffer).metadata();
-    const { width = 800, height = 600 } = metadata;
+    // Process LinkedIn image
+    const linkedinImageBuffer = fs.readFileSync(linkedinImagePath);
+    const linkedinMetadata = await sharp(linkedinImageBuffer).metadata();
+    const { width: linkedinWidth = 800, height: linkedinHeight = 600 } = linkedinMetadata;
 
-    const x = type === "insta" ? width * 0.67 : width * 0.6125;  
-    const y = type === "insta" ? height * 0.75 : height * 0.88; 
+    const linkedinX = linkedinWidth * 0.6125;
+    const linkedinY = linkedinHeight * 0.88;
 
-    const svgOverlay = `
-      <svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg">
+    const linkedinSvgOverlay = `
+      <svg width="${linkedinWidth}" height="${linkedinHeight}" viewBox="0 0 ${linkedinWidth} ${linkedinHeight}" xmlns="http://www.w3.org/2000/svg">
         <style>
           .title {
             fill: #fcd34d;
@@ -36,27 +39,66 @@ export async function POST(req: NextRequest) {
             dominant-baseline: middle;
           }
         </style>
-        <text x="${x}" y="${y}" class="title">${referralCode}</text>
+        <text x="${linkedinX}" y="${linkedinY}" class="title">${referralCode}</text>
       </svg>
     `;
 
-    const processedImageBuffer = await sharp(imageBuffer)
-      .composite([{ input: Buffer.from(svgOverlay), top: 0, left: 0 }])
+    const linkedinProcessedBuffer = await sharp(linkedinImageBuffer)
+      .composite([{ input: Buffer.from(linkedinSvgOverlay), top: 0, left: 0 }])
       .png()
       .toBuffer();
 
-    return new NextResponse(processedImageBuffer, {
-      headers: {
-        'Content-Type': 'image/png',
-        'Content-Disposition': `attachment; filename="referral-${referralCode}.png"`,
-        'Cache-Control': 'no-cache',
-      },
+    // Process Instagram image
+    const instaImageBuffer = fs.readFileSync(instaImagePath);
+    const instaMetadata = await sharp(instaImageBuffer).metadata();
+    const { width: instaWidth = 800, height: instaHeight = 600 } = instaMetadata;
+
+    const instaX = instaWidth * 0.67;
+    const instaY = instaHeight * 0.75;
+
+    const instaSvgOverlay = `
+      <svg width="${instaWidth}" height="${instaHeight}" viewBox="0 0 ${instaWidth} ${instaHeight}" xmlns="http://www.w3.org/2000/svg">
+        <style>
+          .title {
+            fill: #fcd34d;
+            font-size: 45px;
+            font-weight: bold;
+            font-family: Arial, sans-serif;
+            text-anchor: middle;
+            dominant-baseline: middle;
+          }
+        </style>
+        <text x="${instaX}" y="${instaY}" class="title">${referralCode}</text>
+      </svg>
+    `;
+
+    const instaProcessedBuffer = await sharp(instaImageBuffer)
+      .composite([{ input: Buffer.from(instaSvgOverlay), top: 0, left: 0 }])
+      .png()
+      .toBuffer();
+
+    // Return both images as base64 encoded strings
+    const linkedinBase64 = linkedinProcessedBuffer.toString('base64');
+    const instaBase64 = instaProcessedBuffer.toString('base64');
+
+    return NextResponse.json({
+      success: true,
+      images: {
+        linkedin: {
+          data: `data:image/png;base64,${linkedinBase64}`,
+          filename: `referral-linkedin-${referralCode}.png`
+        },
+        instagram: {
+          data: `data:image/png;base64,${instaBase64}`,
+          filename: `referral-instagram-${referralCode}.png`
+        }
+      }
     });
-    
+
   } catch (error) {
-    console.error('Error processing image:', error);
-    return NextResponse.json({ 
-      error: 'An error occurred while processing the image.',
+    console.error('Error processing images:', error);
+    return NextResponse.json({
+      error: 'An error occurred while processing the images.',
       details: error instanceof Error ? error.message : 'Unknown error'
     }, { status: 500 });
   }
