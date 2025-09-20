@@ -4,8 +4,9 @@ import path from 'path';
 import fs from "fs";
 
 export async function POST(req: NextRequest) {
-  const { referralCode } = await req.json();
+  //const { referralCode } = await req.json();
   
+  const referralCode ="TEST123"; // For testing purposes
   if (!referralCode) {
     return NextResponse.json({ error: 'Missing referralCode in request body.' }, { status: 400 });
   }
