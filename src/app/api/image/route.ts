@@ -63,8 +63,8 @@ export async function POST(req: NextRequest) {
     const linkedinMetadata = await sharp(linkedinImageBuffer).metadata();
     const { width: linkedinWidth, height: linkedinHeight } = linkedinMetadata;
     
-    const linkedinX = Math.round(linkedinWidth * 0.6215) - 400;
-    const linkedinY = Math.round(linkedinHeight * 0.88) - 50;
+    const linkedinX = Math.round(linkedinWidth * 0.6280) - 400;
+    const linkedinY = Math.round(linkedinHeight * 0.88) - 53;
 
     const textOverlayBuffer = await createTextOverlay(referralCode);
 
