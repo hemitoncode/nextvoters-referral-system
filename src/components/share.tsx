@@ -1,6 +1,9 @@
 import React, { useEffect } from 'react'
+import { useReferralStore } from '@/store/use-referral-store'
 
-const Share = () => {
+const Share= () => {
+  const referralCode = useReferralStore((state) => state.getReferralCode());
+  
   useEffect(() => {
     const downloadBothImages = async () => {
       try {
@@ -10,7 +13,7 @@ const Share = () => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            referralCode: "ABC123"
+            referralCode
           }),
         });
 
