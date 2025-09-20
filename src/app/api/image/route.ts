@@ -61,7 +61,7 @@ export async function POST(req: NextRequest) {
     // Process LinkedIn image
     const linkedinImageBuffer = fs.readFileSync(linkedinImagePath);
     const linkedinMetadata = await sharp(linkedinImageBuffer).metadata();
-    const { width: linkedinWidth = 800, height: linkedinHeight = 600 } = linkedinMetadata;
+    const { width: linkedinWidth, height: linkedinHeight } = linkedinMetadata;
     
     const linkedinX = Math.round(linkedinWidth * 0.6215) - 400;
     const linkedinY = Math.round(linkedinHeight * 0.88) - 50;
@@ -80,7 +80,7 @@ export async function POST(req: NextRequest) {
     // Process Instagram image
     const instaImageBuffer = fs.readFileSync(instaImagePath);
     const instaMetadata = await sharp(instaImageBuffer).metadata();
-    const { width: instaWidth = 800, height: instaHeight = 600 } = instaMetadata;
+    const { width: instaWidth, height: instaHeight  } = instaMetadata;
     
     const instaX = Math.round(instaWidth * 0.67) - 400;
     const instaY = Math.round(instaHeight * 0.75) - 50;
