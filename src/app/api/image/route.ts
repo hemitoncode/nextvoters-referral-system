@@ -1,7 +1,9 @@
-import sharp from 'sharp';
+import { ImageResponse } from '@vercel/og';
 import { NextRequest, NextResponse } from 'next/server';
 import path from 'path';
 import fs from "fs";
+import sharp from 'sharp';
+import React from 'react';
 
 export async function POST(req: NextRequest) {
   const { referralCode } = await req.json();
@@ -19,45 +21,58 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Base image files are missing on the server.' }, { status: 500 });
     }
 
-    // Escape HTML entities in referral code
-    const escapeHtml = (text: string) => {
-      return text
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#39;');
+    // Create text overlay using Vercel OG with React.createElement
+    const createTextOverlay = async (text: string) => {
+      const imageResponse = new ImageResponse(
+        React.createElement(
+          'div',
+          {
+            style: {
+              width: '800px',
+              height: '100px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              backgroundColor: 'transparent',
+            },
+          },
+          React.createElement(
+            'span',
+            {
+              style: {
+                fontSize: '45px',
+                fontWeight: 'bold',
+                color: '#fcd34d',
+                fontFamily: 'Arial, sans-serif',
+              },
+            },
+            text
+          )
+        ),
+        {
+          width: 800,
+          height: 100,
+        }
+      );
+      
+      return Buffer.from(await imageResponse.arrayBuffer());
     };
-
-    const escapedReferralCode = escapeHtml(referralCode);
 
     // Process LinkedIn image
     const linkedinImageBuffer = fs.readFileSync(linkedinImagePath);
     const linkedinMetadata = await sharp(linkedinImageBuffer).metadata();
     const { width: linkedinWidth = 800, height: linkedinHeight = 600 } = linkedinMetadata;
     
-    // Calculate position (convert percentage to pixels)
-    const linkedinX = Math.round(linkedinWidth * 0.6215);
-    const linkedinY = Math.round(linkedinHeight * 0.88);
+    const linkedinX = Math.round(linkedinWidth * 0.6215) - 400;
+    const linkedinY = Math.round(linkedinHeight * 0.88) - 50;
 
-    // Create SVG with explicit dimensions and positioning
-    const linkedinSvg = `<svg width="${linkedinWidth}" height="${linkedinHeight}" xmlns="http://www.w3.org/2000/svg">
-      <text x="${linkedinX}" y="${linkedinY}" 
-            fill="#fcd34d" 
-            font-size="45" 
-            font-family="Arial" 
-            font-weight="bold" 
-            text-anchor="middle" 
-            alignment-baseline="middle">${escapedReferralCode}</text>
-    </svg>`;
-
-    console.log('LinkedIn SVG:', linkedinSvg); // Debug log
+    const textOverlayBuffer = await createTextOverlay(referralCode);
 
     const linkedinProcessedBuffer = await sharp(linkedinImageBuffer)
       .composite([{
-        input: Buffer.from(linkedinSvg),
-        top: 0,
-        left: 0
+        input: textOverlayBuffer,
+        left: linkedinX,
+        top: linkedinY
       }])
       .png()
       .toBuffer();
@@ -67,26 +82,14 @@ export async function POST(req: NextRequest) {
     const instaMetadata = await sharp(instaImageBuffer).metadata();
     const { width: instaWidth = 800, height: instaHeight = 600 } = instaMetadata;
     
-    const instaX = Math.round(instaWidth * 0.67);
-    const instaY = Math.round(instaHeight * 0.75);
-
-    const instaSvg = `<svg width="${instaWidth}" height="${instaHeight}" xmlns="http://www.w3.org/2000/svg">
-      <text x="${instaX}" y="${instaY}" 
-            fill="#fcd34d" 
-            font-size="45" 
-            font-family="Arial" 
-            font-weight="bold" 
-            text-anchor="middle" 
-            alignment-baseline="middle">${escapedReferralCode}</text>
-    </svg>`;
-
-    console.log('Instagram SVG:', instaSvg); // Debug log
+    const instaX = Math.round(instaWidth * 0.67) - 400;
+    const instaY = Math.round(instaHeight * 0.75) - 50;
 
     const instaProcessedBuffer = await sharp(instaImageBuffer)
       .composite([{
-        input: Buffer.from(instaSvg),
-        top: 0,
-        left: 0
+        input: textOverlayBuffer,
+        left: instaX,
+        top: instaY
       }])
       .png()
       .toBuffer();
