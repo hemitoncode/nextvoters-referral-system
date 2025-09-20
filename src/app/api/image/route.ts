@@ -24,7 +24,7 @@ export async function POST(req: NextRequest) {
     const linkedinMetadata = await sharp(linkedinImageBuffer).metadata();
     const { width: linkedinWidth = 800, height: linkedinHeight = 600 } = linkedinMetadata;
 
-    const linkedinX = linkedinWidth * 0.6125;
+    const linkedinX = linkedinWidth * 0.6215;
     const linkedinY = linkedinHeight * 0.88;
 
     const linkedinSvgOverlay = `
