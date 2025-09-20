@@ -11,7 +11,7 @@ const Share = () => {
           },
           body: JSON.stringify({
             referralCode: "ABC123",
-            type: "linkedin",
+            type: "insta",
           }),
         });
 

@@ -21,8 +21,8 @@ export async function POST(req: NextRequest) {
     const metadata = await sharp(imageBuffer).metadata();
     const { width = 800, height = 600 } = metadata;
 
-    const x = type === "insta" ? width * 0.3 : width * 0.6125;  
-    const y = type === "insta" ? height * 0.8 : height * 0.88; 
+    const x = type === "insta" ? width * 0.67 : width * 0.6125;  
+    const y = type === "insta" ? height * 0.75 : height * 0.88; 
 
     const svgOverlay = `
       <svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg">
