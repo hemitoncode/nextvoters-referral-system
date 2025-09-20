@@ -62,8 +62,8 @@ export async function POST(req: NextRequest) {
     const linkedinMetadata = await sharp(linkedinImageBuffer).metadata();
     const { width: linkedinWidth, height: linkedinHeight } = linkedinMetadata;
     
-    const linkedinX = Math.round(linkedinWidth * 0.6180) - 400;
-    const linkedinY = Math.round(linkedinHeight * 0.88) - 54;
+    const linkedinX = Math.round(linkedinWidth * 0.6140) - 395;
+    const linkedinY = Math.round(linkedinHeight * 0.8720) - 52;
 
     const textOverlayBuffer = await createTextOverlay(referralCode);
 
@@ -81,7 +81,7 @@ export async function POST(req: NextRequest) {
     const instaMetadata = await sharp(instaImageBuffer).metadata();
     const { width: instaWidth, height: instaHeight  } = instaMetadata;
     
-    const instaX = Math.round(instaWidth * 0.6380) - 400;
+    const instaX = Math.round(instaWidth * 0.6080) - 400;
     const instaY = Math.round(instaHeight * 0.75) - 53;
 
     const instaProcessedBuffer = await sharp(instaImageBuffer)
