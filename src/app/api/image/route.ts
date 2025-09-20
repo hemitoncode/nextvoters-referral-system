@@ -41,7 +41,6 @@ export async function POST(req: NextRequest) {
             {
               style: {
                 fontSize: '45px',
-                fontWeight: 'bold',
                 color: '#fcd34d',
                 fontFamily: 'Arial, sans-serif',
               },
