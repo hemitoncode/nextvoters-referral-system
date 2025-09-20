@@ -3,6 +3,20 @@ import { NextRequest, NextResponse } from 'next/server';
 import path from 'path';
 import fs from "fs";
 
+// XML escape function to handle special characters
+const escapeXml = (unsafe: string): string => {
+  return unsafe.replace(/[<>&'"]/g, (c) => {
+    switch (c) {
+      case '<': return '&lt;';
+      case '>': return '&gt;';
+      case '&': return '&amp;';
+      case '\'': return '&apos;';
+      case '"': return '&quot;';
+      default: return c;
+    }
+  });
+};
+
 export async function POST(req: NextRequest) {
   const { referralCode } = await req.json();
   
@@ -23,28 +37,32 @@ export async function POST(req: NextRequest) {
     const linkedinImageBuffer = fs.readFileSync(linkedinImagePath);
     const linkedinMetadata = await sharp(linkedinImageBuffer).metadata();
     const { width: linkedinWidth = 800, height: linkedinHeight = 600 } = linkedinMetadata;
-
     const linkedinX = linkedinWidth * 0.6215;
     const linkedinY = linkedinHeight * 0.88;
 
-    const svgOverlay = (width: number, height: number, x: number, y: number) => { return `
-    <svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg">
-    <defs>
-      <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@700&display=swap');
-        .title {
-          fill: #fcd34d;
-          font-size: 45px;
-          font-weight: 700;
-          font-family: 'Inter', sans-serif;
-          text-anchor: middle;
-          dominant-baseline: middle;
-        }
-      </style>
-    </defs>
-    <text x="${x}" y="${y}" class="title">${referralCode}</text>
-    </svg>
-    `};
+    const svgOverlay = (width: number, height: number, x: number, y: number) => {
+      // Escape the referral code to prevent XML parsing errors
+      const escapedReferralCode = escapeXml(referralCode);
+      
+      return `
+        <svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <style>
+              @import url('https://fonts.googleapis.com/css2?family=Inter:wght@700&amp;display=swap');
+              .title {
+                fill: #fcd34d;
+                font-size: 45px;
+                font-weight: 700;
+                font-family: 'Inter', sans-serif;
+                text-anchor: middle;
+                dominant-baseline: middle;
+              }
+            </style>
+          </defs>
+          <text x="${x}" y="${y}" class="title">${escapedReferralCode}</text>
+        </svg>
+      `;
+    };
 
     const linkedinProcessedBuffer = await sharp(linkedinImageBuffer)
       .composite([{ input: Buffer.from(svgOverlay(linkedinWidth, linkedinHeight, linkedinX, linkedinY)), top: 0, left: 0 }])
@@ -55,10 +73,8 @@ export async function POST(req: NextRequest) {
     const instaImageBuffer = fs.readFileSync(instaImagePath);
     const instaMetadata = await sharp(instaImageBuffer).metadata();
     const { width: instaWidth = 800, height: instaHeight = 600 } = instaMetadata;
-
     const instaX = instaWidth * 0.67;
     const instaY = instaHeight * 0.75;
-
 
     const instaProcessedBuffer = await sharp(instaImageBuffer)
       .composite([{ input: Buffer.from(svgOverlay(instaWidth, instaHeight, instaX, instaY)), top: 0, left: 0 }])
@@ -82,7 +98,6 @@ export async function POST(req: NextRequest) {
         }
       }
     });
-
   } catch (error) {
     console.error('Error processing images:', error);
     return NextResponse.json({
