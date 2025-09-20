@@ -32,7 +32,7 @@ export async function POST(req: NextRequest) {
         <style>
           .title {
             fill: #fcd34d;
-            font-size: 45px;
+            font-size: 60px;
             font-weight: bold;
             font-family: Arial, sans-serif;
             text-anchor: middle;
