@@ -82,8 +82,8 @@ export async function POST(req: NextRequest) {
     const instaMetadata = await sharp(instaImageBuffer).metadata();
     const { width: instaWidth, height: instaHeight  } = instaMetadata;
     
-    const instaX = Math.round(instaWidth * 0.67) - 400;
-    const instaY = Math.round(instaHeight * 0.75) - 50;
+    const instaX = Math.round(instaWidth * 0.6380) - 400;
+    const instaY = Math.round(instaHeight * 0.75) - 53;
 
     const instaProcessedBuffer = await sharp(instaImageBuffer)
       .composite([{
