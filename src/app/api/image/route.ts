@@ -19,35 +19,45 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Base image files are missing on the server.' }, { status: 500 });
     }
 
+    // Escape HTML entities in referral code
+    const escapeHtml = (text: string) => {
+      return text
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    };
+
+    const escapedReferralCode = escapeHtml(referralCode);
+
     // Process LinkedIn image
     const linkedinImageBuffer = fs.readFileSync(linkedinImagePath);
     const linkedinMetadata = await sharp(linkedinImageBuffer).metadata();
     const { width: linkedinWidth = 800, height: linkedinHeight = 600 } = linkedinMetadata;
     
-    // Calculate text position
+    // Calculate position (convert percentage to pixels)
     const linkedinX = Math.round(linkedinWidth * 0.6215);
     const linkedinY = Math.round(linkedinHeight * 0.88);
 
-    // Create text SVG buffer for LinkedIn
-    const createTextSvg = (text: string, fontSize: number = 45) => {
-      return Buffer.from(`
-        <svg width="800" height="100" xmlns="http://www.w3.org/2000/svg">
-          <text x="400" y="50" 
-                font-family="Arial, sans-serif" 
-                font-size="${fontSize}" 
-                font-weight="bold" 
-                fill="#fcd34d" 
-                text-anchor="middle" 
-                dominant-baseline="middle">${text}</text>
-        </svg>
-      `);
-    };
+    // Create SVG with explicit dimensions and positioning
+    const linkedinSvg = `<svg width="${linkedinWidth}" height="${linkedinHeight}" xmlns="http://www.w3.org/2000/svg">
+      <text x="${linkedinX}" y="${linkedinY}" 
+            fill="#fcd34d" 
+            font-size="45" 
+            font-family="Arial" 
+            font-weight="bold" 
+            text-anchor="middle" 
+            alignment-baseline="middle">${escapedReferralCode}</text>
+    </svg>`;
+
+    console.log('LinkedIn SVG:', linkedinSvg); // Debug log
 
     const linkedinProcessedBuffer = await sharp(linkedinImageBuffer)
       .composite([{
-        input: createTextSvg(referralCode),
-        left: linkedinX - 400, // Center the 800px wide SVG
-        top: linkedinY - 50    // Center the 100px tall SVG
+        input: Buffer.from(linkedinSvg),
+        top: 0,
+        left: 0
       }])
       .png()
       .toBuffer();
@@ -60,11 +70,23 @@ export async function POST(req: NextRequest) {
     const instaX = Math.round(instaWidth * 0.67);
     const instaY = Math.round(instaHeight * 0.75);
 
+    const instaSvg = `<svg width="${instaWidth}" height="${instaHeight}" xmlns="http://www.w3.org/2000/svg">
+      <text x="${instaX}" y="${instaY}" 
+            fill="#fcd34d" 
+            font-size="45" 
+            font-family="Arial" 
+            font-weight="bold" 
+            text-anchor="middle" 
+            alignment-baseline="middle">${escapedReferralCode}</text>
+    </svg>`;
+
+    console.log('Instagram SVG:', instaSvg); // Debug log
+
     const instaProcessedBuffer = await sharp(instaImageBuffer)
       .composite([{
-        input: createTextSvg(referralCode),
-        left: instaX - 400,    // Center the 800px wide SVG
-        top: instaY - 50       // Center the 100px tall SVG
+        input: Buffer.from(instaSvg),
+        top: 0,
+        left: 0
       }])
       .png()
       .toBuffer();
