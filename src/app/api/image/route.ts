@@ -4,9 +4,8 @@ import path from 'path';
 import fs from "fs";
 
 export async function POST(req: NextRequest) {
-  //const { referralCode } = await req.json();
+  const { referralCode } = await req.json();
   
-  const referralCode ="TEST123"; // For testing purposes
   if (!referralCode) {
     return NextResponse.json({ error: 'Missing referralCode in request body.' }, { status: 400 });
   }
@@ -28,24 +27,27 @@ export async function POST(req: NextRequest) {
     const linkedinX = linkedinWidth * 0.6215;
     const linkedinY = linkedinHeight * 0.88;
 
-    const linkedinSvgOverlay = `
-      <svg width="${linkedinWidth}" height="${linkedinHeight}" viewBox="0 0 ${linkedinWidth} ${linkedinHeight}" xmlns="http://www.w3.org/2000/svg">
-        <style>
-          .title {
-            fill: #fcd34d;
-            font-size: 45px;
-            font-weight: bold;
-            font-family: Arial, sans-serif;
-            text-anchor: middle;
-            dominant-baseline: middle;
-          }
-        </style>
-        <text x="${linkedinX}" y="${linkedinY}" class="title">${referralCode}</text>
-      </svg>
-    `;
+    const svgOverlay = (width: number, height: number, x: number, y: number) => { return `
+    <svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@700&display=swap');
+        .title {
+          fill: #fcd34d;
+          font-size: 45px;
+          font-weight: 700;
+          font-family: 'Inter', sans-serif;
+          text-anchor: middle;
+          dominant-baseline: middle;
+        }
+      </style>
+    </defs>
+    <text x="${x}" y="${y}" class="title">${referralCode}</text>
+    </svg>
+    `};
 
     const linkedinProcessedBuffer = await sharp(linkedinImageBuffer)
-      .composite([{ input: Buffer.from(linkedinSvgOverlay), top: 0, left: 0 }])
+      .composite([{ input: Buffer.from(svgOverlay(linkedinWidth, linkedinHeight, linkedinX, linkedinY)), top: 0, left: 0 }])
       .png()
       .toBuffer();
 
@@ -57,24 +59,9 @@ export async function POST(req: NextRequest) {
     const instaX = instaWidth * 0.67;
     const instaY = instaHeight * 0.75;
 
-    const instaSvgOverlay = `
-      <svg width="${instaWidth}" height="${instaHeight}" viewBox="0 0 ${instaWidth} ${instaHeight}" xmlns="http://www.w3.org/2000/svg">
-        <style>
-          .title {
-            fill: #fcd34d;
-            font-size: 45px;
-            font-weight: bold;
-            font-family: Arial, sans-serif;
-            text-anchor: middle;
-            dominant-baseline: middle;
-          }
-        </style>
-        <text x="${instaX}" y="${instaY}" class="title">${referralCode}</text>
-      </svg>
-    `;
 
     const instaProcessedBuffer = await sharp(instaImageBuffer)
-      .composite([{ input: Buffer.from(instaSvgOverlay), top: 0, left: 0 }])
+      .composite([{ input: Buffer.from(svgOverlay(instaWidth, instaHeight, instaX, instaY)), top: 0, left: 0 }])
       .png()
       .toBuffer();
 
