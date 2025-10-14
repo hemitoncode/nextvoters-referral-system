@@ -20,6 +20,7 @@ const ReferralForm = () => {
       }
 
       generateReferralCode()
+      switchScreen('share')
     } catch (error) {
       alert(error instanceof Error ? error.message : 'Something went wrong')
     } finally {
