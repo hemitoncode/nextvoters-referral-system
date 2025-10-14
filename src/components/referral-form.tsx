@@ -20,10 +20,6 @@ const ReferralForm = () => {
       }
 
       generateReferralCode()
-
-      if (!success) {
-        throw new Error('Unable to generate a unique referral code. Please try again.')
-      }
     } catch (error) {
       alert(error instanceof Error ? error.message : 'Something went wrong')
     } finally {
