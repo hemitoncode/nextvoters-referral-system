@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import Button from './ui/button'
 import switchScreen from '@/lib/switch-screen'
 import { generateReferralCode, getReferralCode } from '@/lib/referral-utils'
-import { addVerificationCode } from '@/lib/verification-utils'
 
 const ReferralForm = () => {
   const [email, setEmail] = useState('')
@@ -20,27 +19,7 @@ const ReferralForm = () => {
         throw new Error("Invalid email format")
       }
 
-      let attempts = 0
-      const maxAttempts = 5
-      let success = false
-
-      while (attempts < maxAttempts && !success) {
-        attempts++
-        generateReferralCode()
-        const referralCode = getReferralCode()
-
-        const result = await addVerificationCode(referralCode, email)
-
-        if (result?.success) {
-          success = true
-          switchScreen('share')
-        } else if (result?.error === 'Verification code already exists') {
-          // retry with new code
-          continue
-        } else {
-          throw new Error(result?.error || 'Unknown error occurred')
-        }
-      }
+      generateReferralCode()
 
       if (!success) {
         throw new Error('Unable to generate a unique referral code. Please try again.')
