@@ -12,8 +12,8 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Missing referralCode in request body.' }, { status: 400 });
   }
 
-  const linkedinImagePath = path.join(process.cwd(), 'public', "referral-graphic.png");
-  const instaImagePath = path.join(process.cwd(), 'public', "referral-graphic-small.png");
+  const linkedinImagePath = path.join(process.cwd(), 'public', "referral-graphic.jpg");
+  const instaImagePath = path.join(process.cwd(), 'public', "referral-graphic-small.jpg");
 
   try {
     // Check if both files exist
